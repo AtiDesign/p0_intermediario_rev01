@@ -1,17 +1,22 @@
 # Testes simulados (credencial inválida, timeout, etc.)
 import os
+import sys
 import unittest
 from unittest.mock import MagicMock, patch
 import requests
 
-from src.config import AppConfig, load_config
-from src.exceptions import (
+# Garante que a pasta src esteja visível para os testes
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+
+from config import AppConfig, load_config
+from exceptions import (
     ConfigError,
     LLMAuthError,
     LLMConnectionError,
     LLMResponseError,
 )
-from src.llm_client import call_model, parse_response
+from llm_client import call_model, parse_response
+
 
 class TestLLMErrorHandling(unittest.TestCase):
 
@@ -24,14 +29,14 @@ class TestLLMErrorHandling(unittest.TestCase):
         )
 
     @patch.dict(os.environ, {"LLM_API_URL": "https://api.exemplo.com", "LLM_API_KEY": "", "LLM_MODEL_NAME": "gpt"}, clear=True)
-    @patch("src.config.load_dotenv")
+    @patch("config.load_dotenv")
     def test_missing_credential(self, _mock_dotenv):
         """Simula credencial ausente no ambiente."""
         with self.assertRaises(ConfigError) as ctx:
             load_config()
         self.assertIn("Credencial ausente", str(ctx.exception))
 
-    @patch("src.llm_client.requests.post")
+    @patch("llm_client.requests.post")
     def test_invalid_credential(self, mock_post):
         """Simula retorno HTTP 401 (credencial inválida)."""
         mock_resp = MagicMock()
@@ -43,14 +48,14 @@ class TestLLMErrorHandling(unittest.TestCase):
             call_model({}, {}, self.mock_config)
         self.assertIn("credencial informada é inválida", str(ctx.exception))
 
-    @patch("src.llm_client.requests.post", side_effect=requests.exceptions.Timeout)
+    @patch("llm_client.requests.post", side_effect=requests.exceptions.Timeout)
     def test_timeout(self, _mock_post):
         """Simula estouro de tempo limite (Timeout)."""
         with self.assertRaises(LLMConnectionError) as ctx:
             call_model({}, {}, self.mock_config)
         self.assertIn("Timeout", str(ctx.exception))
 
-    @patch("src.llm_client.requests.post")
+    @patch("llm_client.requests.post")
     def test_service_unavailable(self, mock_post):
         """Simula indisponibilidade do servidor (HTTP 503)."""
         mock_resp = MagicMock()
@@ -70,6 +75,7 @@ class TestLLMErrorHandling(unittest.TestCase):
         with self.assertRaises(LLMResponseError) as ctx:
             parse_response(mock_resp)
         self.assertIn("estrutura inesperada", str(ctx.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

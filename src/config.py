@@ -2,7 +2,7 @@
 import os
 from dataclasses import dataclass
 from dotenv import load_dotenv
-from src.exceptions import ConfigError
+from exceptions import ConfigError
 
 @dataclass
 class AppConfig:

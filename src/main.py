@@ -1,8 +1,8 @@
 # Captura de entrada, orquestração e exibição do resultado
 import sys
-from src.config import load_config
-from src.exceptions import AppError, InputValidationError
-from src.llm_client import call_model, parse_response, prepare_request
+from config import load_config
+from exceptions import AppError, InputValidationError
+from llm_client import call_model, parse_response, prepare_request
 
 def capture_input() -> str:
     """Captura e valida a entrada do usuário."""

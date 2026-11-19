@@ -1,7 +1,7 @@
 # Preparação da requisição, chamada HTTP e tratamento
 import requests
-from src.config import AppConfig
-from src.exceptions import (
+from config import AppConfig
+from exceptions import (
     LLMAuthError,
     LLMConnectionError,
     LLMResponseError,
