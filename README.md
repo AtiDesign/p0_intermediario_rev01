@@ -24,5 +24,5 @@ O projeto está estruturado em módulos com responsabilidades bem definidas dent
 
 1. **Clone o repositório e acesse a pasta do projeto:**
    ```bash
-   git clone [https://github.com/seu-usuario/p0_intermediario_rev01.git](https://github.com/seu-usuario/p0_intermediario_rev01.git)
+   git clone [https://github.com/AtiDesign/p0_intermediario_rev01.git](https://github.com/AtiDesign/p0_intermediario_rev01.git)
    cd p0_intermediario_rev01
