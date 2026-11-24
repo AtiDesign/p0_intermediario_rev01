@@ -13,9 +13,20 @@ def prepare_request(prompt: str, config: AppConfig) -> tuple[dict, dict]:
         "Authorization": f"Bearer {config.api_key}",
         "Content-Type": "application/json",
     }
+    instrucao_sistema = (
+        "Você é um extrator de informações de contato. Extraia do texto fornecido: "
+        "NOMES, E-MAILS, TELEFONES e URLS. Responda em português, estritamente neste formato:\n\n"
+        "NOMES\n------------------------------\n(lista ou 'Nenhum encontrado')\n\n"
+        "E-MAILS\n------------------------------\n(lista ou 'Nenhum encontrado')\n\n"
+        "TELEFONES\n------------------------------\n(lista ou 'Nenhum encontrado')\n\n"
+        "URLS\n------------------------------\n(lista ou 'Nenhuma encontrada')"
+    )
     payload = {
         "model": config.model_name,
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": [
+            {"role": "system", "content": instrucao_sistema},
+            {"role": "user", "content": prompt},
+        ],
     }
     return headers, payload
 
