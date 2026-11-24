@@ -1,8 +1,12 @@
 # Carregamento e validação de configurações/.env
 import os
+from pathlib import Path
 from dataclasses import dataclass
 from dotenv import load_dotenv
 from exceptions import ConfigError
+
+# Aponta explicitamente para o .env na raiz do projeto (um nível acima de src/)
+ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
 
 @dataclass
 class AppConfig:
@@ -12,7 +16,7 @@ class AppConfig:
     timeout: int = 15
 
 def load_config() -> AppConfig:
-    load_dotenv()
+    load_dotenv(dotenv_path=ENV_PATH, override=True)
 
     api_url = os.getenv("LLM_API_URL", "").strip()
     api_key = os.getenv("LLM_API_KEY", "").strip()
